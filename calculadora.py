@@ -3,9 +3,10 @@
 # Youtube: https://www.youtube.com/c/MagnoEfren
 
 from tkinter import Button, Tk, Frame,Entry,END
+import analizador_sintactico
 
 ventana = Tk()
-ventana.geometry('350x400')
+ventana.geometry('330x380')
 ventana.config(bg= "white")
 #ventana.iconbitmap(bitmap='icono.ico')
 ventana.resizable(0,0)
@@ -36,14 +37,13 @@ def operacion():
 	ecuacion = Resultado.get()
 	if i !=0:		
 		try:
-			result = str(eval(ecuacion))
+			result = analizador_sintactico.parser.parse(ecuacion)
+			print(result)
 			Resultado.delete(0,END)
 			Resultado.insert(0,result)
-			longitud = len(result)
-			i = longitud
 
-		except:
-			result = 'ERROR'
+		except SyntaxError as e:
+			result = str(e)
 			Resultado.delete(0,END)
 			Resultado.insert(0,result)
 	else:
@@ -63,7 +63,7 @@ def borrar_todo():
 
 frame = Frame(ventana, bg ='black', relief = "raised")
 frame.grid(column=0, row=0, padx=6, pady=3)
-Resultado = Entry(frame,bg='#9EF8E8', width=18, relief='groove', font = 'Montserrat 16',justif = 'right')
+Resultado = Entry(frame,bg='#9EF8E8', width=20, relief='groove', font = 'Montserrat 16',justif = 'right')
 Resultado.grid(columnspan=4 , row=0, pady=3,padx=1, ipadx=1, ipady=1) 
 
 #fila 1
@@ -97,19 +97,23 @@ Button_menos = HoverButton(frame, text= "-", height=2, width=5,font= ('Comic sen
 Button_menos.grid(column =3, row=3, pady=2,padx=2)
 
 #fila 4
-Button0 = HoverButton(frame, text= "0",height=5, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="aqua",bg ='#999AB8',  anchor="center",command=lambda: obtener(0))  
-Button0.grid( column= 0, rowspan=2, row=4, pady=1,padx=1)
-Button_punto = HoverButton(frame, text= ".", height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="aqua",bg ='#999AB8', anchor="center",command=lambda: obtener('.'))  
-Button_punto.grid(column =1 , row=4, pady=1,padx=1)
-Button_entre = HoverButton(frame, text= "÷", height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="#FEEF02",bg ='#2A16F7',  anchor="center",command=lambda: obtener('/'))  
-Button_entre.grid(column =2, row=4, pady=1,padx=1)
+Button0 = HoverButton(frame, text= "0",height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="aqua",bg ='#999AB8',  anchor="center",command=lambda: obtener(0))  
+Button0.grid( column= 1, row=4, pady=1,padx=1)
+Button_left_p = HoverButton(frame, text= "(", height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="aqua",bg ='#999AB8', anchor="center",command=lambda: obtener('('))  
+Button_left_p.grid(column =0 , row=4, pady=1,padx=1)
+Button_right_p = HoverButton(frame, text= ")", height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="aqua",bg ='#999AB8', anchor="center",command=lambda: obtener(')'))  
+Button_right_p.grid(column =2 , row=4, pady=1,padx=1)
 Button_por = HoverButton(frame, text= "x", height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="#FEEF02", bg='#2A16F7',  anchor="center",command=lambda: obtener('*'))  
 Button_por.grid(column =3, row=4, pady=2,padx=2)
 
 #fila 4
-Button_igual = HoverButton(frame, text= "=", height=2, width=12,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="#16FD03", bg='#2FEC71', anchor="center",command=lambda: operacion())  
-Button_igual.grid(column =1 ,columnspan=2, row=5, pady=1,padx=1)
+Button_igual = HoverButton(frame, text= "=", height=2, width=14,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="#16FD03", bg='#2FEC71', anchor="center",command=lambda: operacion())  
+Button_igual.grid(column =0 ,columnspan=2, row=5, pady=1,padx=1)
 Button_borrar = HoverButton(frame, text= "C", height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2, relief = "raised", activebackground="red", bg='#FD5603', anchor="center",command=lambda: borrar_todo())  
-Button_borrar.grid(column =3, row=5, pady=2,padx=2)
+Button_borrar.grid(column =2, row=5, pady=2,padx=2)
+Button_entre = HoverButton(frame, text= "÷", height=2, width=5,font= ('Comic sens MC',12,'bold'), borderwidth=2,  relief = "raised", activebackground="#FEEF02",bg ='#2A16F7',  anchor="center",command=lambda: obtener('/'))  
+Button_entre.grid(column =3, row=5, pady=1,padx=1)
+
+
 
 ventana.mainloop()
